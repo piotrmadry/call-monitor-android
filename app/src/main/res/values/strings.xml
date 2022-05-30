@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">CallMonitor</string>
+    <string name="app_name">Call Monitor</string>
+    <string name="main_activity_rationale_dialog_alert_title">Missing permissions</string>
+    <string name="main_activity_rationale_dialog_alert_description">Requested permissions are required to run the app</string>
+    <string name="main_activity_rationale_dialog_alert_positive_btn_text">Open settings</string>
+    <string name="main_activity_rationale_dialog_alert_negative_btn_text">Close app</string>
 </resources>
