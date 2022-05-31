@@ -19,22 +19,18 @@ class PermissionsManager @Inject constructor(
         resultLauncher: ActivityResultLauncher<String>,
         permission: String,
         requestRationale: () -> Unit
-    ): Boolean {
-        return if (ContextCompat.checkSelfPermission(
-                context,
+    ): Boolean = if (
+        ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_DENIED
+    ) {
+        when {
+            shouldShowRequestPermissionRationale(
+                context as Activity,
                 permission
-            ) == PackageManager.PERMISSION_DENIED
-        ) {
-            when {
-                shouldShowRequestPermissionRationale(
-                    context as Activity,
-                    permission
-                ) -> requestRationale()
-                else -> resultLauncher.launch(permission)
-            }
-            false
-        } else {
-            true
+            ) -> requestRationale()
+            else -> resultLauncher.launch(permission)
         }
+        false
+    } else {
+        true
     }
 }
