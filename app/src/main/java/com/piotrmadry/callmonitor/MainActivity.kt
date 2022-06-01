@@ -5,10 +5,11 @@ import android.app.AlertDialog
 import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.text.format.Formatter
-import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.piotrmadry.callmonitor.databinding.ActivityMainBinding
 import com.piotrmadry.httpserver.HttpServer
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -18,18 +19,28 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var server: HttpServer
 
+    private lateinit var binding: ActivityMainBinding
+
     @Inject
     lateinit var callHistory: CallHistory
 
     @Inject
     lateinit var permissionManager: PermissionsManager
 
+    private val recyclerViewAdapter = CallMonitorRecyclerViewAdapter()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         server = HttpServer(port = 12345)
         server.start()
+
+        binding.recyclerview.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = recyclerViewAdapter
+        }
     }
 
     override fun onResume() {
@@ -72,13 +83,15 @@ class MainActivity : AppCompatActivity() {
         startActivity(IntentUtils.getAppSettingsIntent(this))
 
     private fun getCallsHistory() {
-        findViewById<TextView>(R.id.ip)?.text = callHistory.getLog().firstOrNull().toString()
+        recyclerViewAdapter.setItems(
+            listOf(ServerInfoItem(ipAddress = getWifiIpAddress())) +
+                callHistory.getLog().map { CallItem(id = it.id, name = it.name) })
     }
 
-    private fun getWifiIpAddress(): String? {
+    private fun getWifiIpAddress(): String {
         val wifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
         val info = wifiManager.connectionInfo
-        return Formatter.formatIpAddress(info.ipAddress)
+        return Formatter.formatIpAddress(info.ipAddress) + ":12345"
     }
 
     override fun onDestroy() {

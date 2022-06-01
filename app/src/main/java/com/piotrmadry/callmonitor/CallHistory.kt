@@ -3,6 +3,7 @@ package com.piotrmadry.callmonitor
 import android.content.ContentResolver
 import android.database.Cursor
 import android.provider.CallLog
+import java.util.UUID
 import javax.inject.Inject
 
 class CallHistory @Inject constructor(
@@ -19,17 +20,19 @@ class CallHistory @Inject constructor(
             null
         ) ?: return logs
 
+        val idIndex = cursor.getColumnIndex(CallLog.Calls._ID)
         val beginningIndex = cursor.getColumnIndex(CallLog.Calls.DATE)
         val durationIndex = cursor.getColumnIndex(CallLog.Calls.DURATION)
         val numberIndex = cursor.getColumnIndex(CallLog.Calls.NUMBER)
-        val nameIndex = cursor.getColumnIndex(CallLog.Calls.CACHED_NAME)
+        val nameIndex = cursor.getColumnIndex(CallLog.Calls.CACHED_LOOKUP_URI)
         while (cursor.moveToNext()) {
             logs.add(
                 Log(
+                    id = UUID.randomUUID().toString(),
                     beginning = cursor.getString(beginningIndex),
                     duration = cursor.getString(durationIndex),
                     number = cursor.getString(numberIndex),
-                    name = "Unknown",
+                    name = cursor.getString(nameIndex) ?: "Unknown",
                     1
                 )
             )
@@ -50,6 +53,7 @@ class CallHistory @Inject constructor(
 
 
 data class Log(
+    val id: String,
     val beginning: String,
     val duration: String,
     val number: String,
