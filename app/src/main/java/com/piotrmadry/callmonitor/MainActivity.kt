@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if (checkAndRequestReadCallLogPermission()) {
+        if (checkAndRequestReadCallLogPermission() && checkAndRequestReadContactPermission()) {
             getCallsHistory()
         }
     }
@@ -79,13 +79,19 @@ class MainActivity : AppCompatActivity() {
         requestRationale = rationaleDialog::show
     )
 
+    private fun checkAndRequestReadContactPermission() = permissionManager.hasPermission(
+        resultLauncher = permissionResult,
+        permission = Manifest.permission.READ_CONTACTS,
+        requestRationale = rationaleDialog::show
+    )
+
     private fun openAppSettings() =
         startActivity(IntentUtils.getAppSettingsIntent(this))
 
     private fun getCallsHistory() {
         recyclerViewAdapter.setItems(
             listOf(ServerInfoItem(ipAddress = getWifiIpAddress())) +
-                callHistory.getLog().map { CallItem(id = it.id, name = it.name) })
+                callHistory.getLog().map { CallItem(id = it.id, name = it.name, duration = it.duration) })
     }
 
     private fun getWifiIpAddress(): String {

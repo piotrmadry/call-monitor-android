@@ -2,7 +2,9 @@ package com.piotrmadry.callmonitor
 
 import android.content.ContentResolver
 import android.database.Cursor
+import android.net.Uri
 import android.provider.CallLog
+import android.provider.ContactsContract
 import java.util.UUID
 import javax.inject.Inject
 
@@ -12,6 +14,7 @@ class CallHistory @Inject constructor(
 
     fun getLog(): List<Log> {
         val logs = mutableListOf<Log>()
+
         val cursor: Cursor = contentResolver.query(
             CallLog.Calls.CONTENT_URI,
             projection,
@@ -20,19 +23,17 @@ class CallHistory @Inject constructor(
             null
         ) ?: return logs
 
-        val idIndex = cursor.getColumnIndex(CallLog.Calls._ID)
         val beginningIndex = cursor.getColumnIndex(CallLog.Calls.DATE)
         val durationIndex = cursor.getColumnIndex(CallLog.Calls.DURATION)
         val numberIndex = cursor.getColumnIndex(CallLog.Calls.NUMBER)
-        val nameIndex = cursor.getColumnIndex(CallLog.Calls.CACHED_LOOKUP_URI)
         while (cursor.moveToNext()) {
             logs.add(
                 Log(
-                    id = UUID.randomUUID().toString(),
+                    id = cursor.getString(beginningIndex),
                     beginning = cursor.getString(beginningIndex),
                     duration = cursor.getString(durationIndex),
                     number = cursor.getString(numberIndex),
-                    name = cursor.getString(nameIndex) ?: "Unknown",
+                    name = getContactNameByPhoneNumber(cursor.getString(numberIndex)) ?: "Unknown",
                     1
                 )
             )
@@ -48,6 +49,37 @@ class CallHistory @Inject constructor(
             CallLog.Calls.NUMBER,
             CallLog.Calls.CACHED_NAME
         )
+
+        val contactsProjection = arrayOf(
+            ContactsContract.PhoneLookup.DISPLAY_NAME
+        )
+    }
+
+    private fun getContactNameByPhoneNumber(phoneNumber: String): String? {
+        if (phoneNumber.isEmpty()) return null
+
+        val uri = Uri.withAppendedPath(
+            ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
+            Uri.encode(phoneNumber)
+        )
+        val cursor: Cursor = contentResolver.query(
+            uri,
+            contactsProjection,
+            null,
+            null,
+            null
+        ) ?: return null
+
+        val contactNameIndex = cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME)
+
+        val contactName = if (cursor.moveToFirst()) {
+            cursor.getString(contactNameIndex)
+        } else {
+            null
+        }
+
+        cursor.close()
+        return contactName
     }
 }
 

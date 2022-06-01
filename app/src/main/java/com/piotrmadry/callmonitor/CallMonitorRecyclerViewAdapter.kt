@@ -11,7 +11,7 @@ interface RecyclerViewItem
 
 data class ServerInfoItem(val ipAddress: String) : RecyclerViewItem
 
-data class CallItem(val id: String, val name: String) : RecyclerViewItem
+data class CallItem(val id: String, val name: String, val duration: String) : RecyclerViewItem
 
 class CallMonitorRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -63,8 +63,8 @@ class CallMonitorRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHol
             }
             is CallItem ->
                 (viewHolder as CallViewHolder).binding.apply {
-                    id.text = item.id
                     name.text = item.name
+                    duration.text = item.duration
                 }
         }
     }
