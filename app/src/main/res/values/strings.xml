@@ -4,4 +4,7 @@
     <string name="main_activity_rationale_dialog_alert_description">Requested permissions are required to run the app</string>
     <string name="main_activity_rationale_dialog_alert_positive_btn_text">Open settings</string>
     <string name="main_activity_rationale_dialog_alert_negative_btn_text">Close app</string>
+    <string name="server_info_item_title">Your local IP address: %1$s</string>
+    <string name="call_item_duration">Duration: %1$s s</string>
+    <string name="call_item_contact_name">Contact name: %1$s</string>
 </resources>

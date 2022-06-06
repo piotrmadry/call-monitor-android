@@ -57,14 +57,16 @@ class CallMonitorRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
+        val context = viewHolder.itemView.context
         when (val item = dataSet[position]) {
             is ServerInfoItem -> {
-                (viewHolder as ServerInfoViewHolder).binding.ipAddress.text = item.ipAddress
+                (viewHolder as ServerInfoViewHolder).binding.ipAddress.text =
+                    context.getString(R.string.server_info_item_title, item.ipAddress)
             }
             is CallItem ->
                 (viewHolder as CallViewHolder).binding.apply {
-                    name.text = item.name
-                    duration.text = item.duration
+                    name.text = context.getString(R.string.call_item_contact_name, item.name)
+                    duration.text = context.getString(R.string.call_item_duration, item.duration)
                 }
         }
     }

@@ -9,12 +9,14 @@
 
     <TextView
         android:id="@+id/name"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="name" />
 
     <TextView
         android:id="@+id/duration"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="duration" />
