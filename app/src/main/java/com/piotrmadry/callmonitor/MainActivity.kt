@@ -2,11 +2,10 @@ package com.piotrmadry.callmonitor
 
 import android.Manifest
 import android.app.AlertDialog
-import android.net.wifi.WifiManager
 import android.os.Bundle
-import android.text.format.Formatter
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.piotrmadry.callmonitor.databinding.ActivityMainBinding
@@ -27,6 +26,8 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var permissionManager: PermissionsManager
 
+    private val viewModel: MainActivityViewModel by viewModels()
+
     private val recyclerViewAdapter = CallMonitorRecyclerViewAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,12 +35,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        server = HttpServer(port = 12345)
+        server = HttpServer(port = Constants.ServerPort)
         server.start()
 
         binding.recyclerview.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = recyclerViewAdapter
+        }
+
+        viewModel.items.observe(this) {
+            recyclerViewAdapter.setItems(it)
         }
     }
 
@@ -47,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
 
         if (checkAndRequestReadCallLogPermission() && checkAndRequestReadContactPermission()) {
-            getCallsHistory()
+            viewModel.getData()
         }
     }
 
@@ -70,7 +75,7 @@ class MainActivity : AppCompatActivity() {
     private val permissionResult: ActivityResultLauncher<String> = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { hasPermission ->
-        if (hasPermission) getCallsHistory()
+        if (hasPermission) viewModel.getData()
     }
 
     private fun checkAndRequestReadCallLogPermission() = permissionManager.hasPermission(
@@ -87,18 +92,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun openAppSettings() =
         startActivity(IntentUtils.getAppSettingsIntent(this))
-
-    private fun getCallsHistory() {
-        recyclerViewAdapter.setItems(
-            listOf(ServerInfoItem(ipAddress = getWifiIpAddress())) +
-                callHistory.getLog().map { CallItem(id = it.id, name = it.name, duration = it.duration) })
-    }
-
-    private fun getWifiIpAddress(): String {
-        val wifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
-        val info = wifiManager.connectionInfo
-        return Formatter.formatIpAddress(info.ipAddress) + ":12345"
-    }
 
     override fun onDestroy() {
         super.onDestroy()
