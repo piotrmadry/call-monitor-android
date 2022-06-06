@@ -20,7 +20,11 @@ class MainActivityViewModel @Inject constructor(
     private val _items = MutableLiveData<List<RecyclerViewItem>>()
     val items: LiveData<List<RecyclerViewItem>> = _items
 
+    private val _progress = MutableLiveData<Boolean>()
+    val progress: LiveData<Boolean> = _progress
+
     fun getData() {
+        _progress.value = true
         viewModelScope.launch {
             val callItems = withContext(dispatcherIo) {
                 callHistory.getLogCompact().map {
@@ -31,6 +35,7 @@ class MainActivityViewModel @Inject constructor(
                     )
                 }
             }
+            _progress.value = false
             _items.value = createServerInfoItem() + callItems
         }
     }

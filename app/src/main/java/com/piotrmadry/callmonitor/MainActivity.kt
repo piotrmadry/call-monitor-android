@@ -7,6 +7,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.piotrmadry.callmonitor.databinding.ActivityMainBinding
 import com.piotrmadry.httpserver.HttpServer
@@ -45,6 +46,13 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.items.observe(this) {
             recyclerViewAdapter.setItems(it)
+        }
+
+        viewModel.progress.observe(this) { isVisible ->
+            with(binding) {
+                progressBar.isVisible = isVisible
+                recyclerview.isVisible = !isVisible
+            }
         }
     }
 
