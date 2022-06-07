@@ -70,7 +70,7 @@ class CallHistory @Inject constructor(
         return logs.toList()
     }
 
-    private fun getContactNameByPhoneNumber(phoneNumber: String): String? {
+    fun getContactNameByPhoneNumber(phoneNumber: String): String? {
         if (phoneNumber.isEmpty()) return null
         val cursor: Cursor = getContactByPhoneNumberCursor(phoneNumber) ?: return null
 

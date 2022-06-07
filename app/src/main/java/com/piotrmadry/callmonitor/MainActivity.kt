@@ -62,7 +62,10 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if (checkAndRequestReadCallLogPermission() && checkAndRequestReadContactPermission()) {
+        if (checkAndRequestReadCallLogPermission()
+            && checkAndRequestReadContactPermission()
+            && checkAndRequestPhoneStatePermission()
+        ) {
             viewModel.getData()
         }
     }
@@ -98,6 +101,12 @@ class MainActivity : AppCompatActivity() {
     private fun checkAndRequestReadContactPermission() = permissionManager.hasPermission(
         resultLauncher = permissionResult,
         permission = Manifest.permission.READ_CONTACTS,
+        requestRationale = rationaleDialog::show
+    )
+
+    private fun checkAndRequestPhoneStatePermission() = permissionManager.hasPermission(
+        resultLauncher = permissionResult,
+        permission = Manifest.permission.READ_PHONE_STATE,
         requestRationale = rationaleDialog::show
     )
 

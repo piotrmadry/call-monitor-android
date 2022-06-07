@@ -31,9 +31,18 @@ class APIServiceImpl @Inject constructor(
     }
 
     override fun getStatus(): String {
-        return "Not implemented yet"
+        val response = responseLoader.getStatus()
+
+        return moshi.adapter(StatusResponse::class.java).toJson(response)
     }
 }
+
+@JsonClass(generateAdapter = true)
+data class StatusResponse(
+    @Json(name = "ongoing") val ongoing: Boolean,
+    @Json(name = "number") val phoneNumber: String? = null,
+    @Json(name = "name") val contactName: String? = null,
+)
 
 @JsonClass(generateAdapter = true)
 data class RootResponse(

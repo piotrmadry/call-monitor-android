@@ -6,7 +6,8 @@ import javax.inject.Singleton
 @Singleton
 class APIServiceResponseLoader @Inject constructor(
     private val callHistory: CallHistory,
-    private val networkHelper: NetworkHelper
+    private val networkHelper: NetworkHelper,
+    private val pref: AppSharedPreferences
 ) {
 
     fun getRootResponse(): RootResponse {
@@ -37,5 +38,18 @@ class APIServiceResponseLoader @Inject constructor(
                     timesQueried = it.timesQueried
                 )
             }
+    }
+
+    fun getStatus(): StatusResponse {
+        val phoneNumber = pref.getOngoingCallPhoneNumber()
+            ?: return StatusResponse(ongoing = false)
+
+        val name = callHistory.getContactNameByPhoneNumber(phoneNumber) ?: "Unknown"
+
+        return StatusResponse(
+            ongoing = true,
+            contactName = name,
+            phoneNumber = phoneNumber
+        )
     }
 }
