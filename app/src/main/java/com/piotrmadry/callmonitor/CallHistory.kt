@@ -23,8 +23,8 @@ class CallHistory @Inject constructor(
         )
     }
 
-    fun getLog(): List<Log> {
-        val logs = mutableListOf<Log>()
+    fun getLog(): List<LogDataModel> {
+        val logs = mutableListOf<LogDataModel>()
 
         val cursor: Cursor = getCallLogCursor() ?: return logs
 
@@ -34,7 +34,7 @@ class CallHistory @Inject constructor(
 
         while (cursor.moveToNext()) {
             logs.add(
-                Log(
+                LogDataModel(
                     id = cursor.getString(beginningIndex),
                     beginning = cursor.getString(beginningIndex),
                     duration = cursor.getString(durationIndex),
@@ -48,8 +48,8 @@ class CallHistory @Inject constructor(
         return logs.toList()
     }
 
-    suspend fun getLogCompact(): List<LogCompact> {
-        val logs = mutableListOf<LogCompact>()
+    fun getLogCompact(): List<LogCompactDataModel> {
+        val logs = mutableListOf<LogCompactDataModel>()
 
         val cursor: Cursor = getCallLogCursor() ?: return logs
 
@@ -59,7 +59,7 @@ class CallHistory @Inject constructor(
 
         while (cursor.moveToNext()) {
             logs.add(
-                LogCompact(
+                LogCompactDataModel(
                     id = cursor.getString(beginningIndex),
                     contactName = getContactNameByPhoneNumber(cursor.getString(numberIndex)) ?: "Unknown",
                     durationInSeconds = cursor.getString(durationIndex)
@@ -108,13 +108,13 @@ class CallHistory @Inject constructor(
 }
 
 
-data class LogCompact(
+data class LogCompactDataModel(
     val id: String,
     val contactName: String,
     val durationInSeconds: String
 )
 
-data class Log(
+data class LogDataModel(
     val id: String,
     val beginning: String,
     val duration: String,

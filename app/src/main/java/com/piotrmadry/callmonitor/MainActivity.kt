@@ -27,6 +27,9 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var permissionManager: PermissionsManager
 
+    @Inject
+    lateinit var impl: APIServiceImpl
+
     private val viewModel: MainActivityViewModel by viewModels()
 
     private val recyclerViewAdapter = CallMonitorRecyclerViewAdapter()
@@ -36,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        server = HttpServer(port = Constants.ServerPort)
+        server = HttpServer(port = Constants.ServerPort, service = impl)
         server.start()
 
         binding.recyclerview.apply {
