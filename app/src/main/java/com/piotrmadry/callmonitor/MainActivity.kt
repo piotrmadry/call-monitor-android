@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         server = HttpServer(port = Server.Port, service = impl)
-        server.start().run { pref.storeServerStartDate(date.toDateTimeWithTimeZone(System.currentTimeMillis(), Locale.getDefault())) }
+        server.start().run { pref.storeServerStartMs(System.currentTimeMillis()) }
 
         binding.recyclerview.apply {
             layoutManager = LinearLayoutManager(context)

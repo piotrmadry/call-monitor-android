@@ -7,10 +7,12 @@ import android.provider.CallLog
 import android.provider.ContactsContract
 import com.piotrmadry.callmonitor.datamodel.LogCompactDataModel
 import com.piotrmadry.callmonitor.datamodel.LogDataModel
+import com.piotrmadry.callmonitor.storage.AppSharedPreferences
 import javax.inject.Inject
 
 class CallHistoryUseCase @Inject constructor(
-    private val contentResolver: ContentResolver
+    private val contentResolver: ContentResolver,
+    private val appPreferences: AppSharedPreferences
 ) {
     companion object {
         val logProjection = arrayOf(
@@ -26,9 +28,19 @@ class CallHistoryUseCase @Inject constructor(
     }
 
     fun getLog(): List<LogDataModel> {
+
+        val appStartMs = appPreferences.getServerStartMs()
+
+        val (selection, args) = if (appStartMs != -1L) {
+            CallLog.Calls.DATE + ">=?" to arrayOf(appStartMs.toString())
+        } else null to null
+
         val logs = mutableListOf<LogDataModel>()
 
-        val cursor: Cursor = getCallLogCursor() ?: return logs
+        val cursor: Cursor = getCallLogCursor(
+            selection = selection,
+            selectionArgs = args
+        ) ?: return logs
 
         val beginningIndex = cursor.getColumnIndex(CallLog.Calls.DATE)
         val durationIndex = cursor.getColumnIndex(CallLog.Calls.DURATION)
@@ -84,12 +96,15 @@ class CallHistoryUseCase @Inject constructor(
         return contactName
     }
 
-    private fun getCallLogCursor(): Cursor? {
+    private fun getCallLogCursor(
+        selection: String? = null,
+        selectionArgs: Array<String>? = null
+    ): Cursor? {
         return contentResolver.query(
             CallLog.Calls.CONTENT_URI,
             logProjection,
-            null,
-            null,
+            selection,
+            selectionArgs,
             null
         )
     }

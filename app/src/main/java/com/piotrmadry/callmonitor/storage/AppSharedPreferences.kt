@@ -22,19 +22,19 @@ class AppSharedPreferences @Inject constructor(
     fun getOngoingCallPhoneNumber(): String? = preferences.getString(OngoingPhoneNumberKey, null)
 
 
-    fun storeServerStartDate(startDate: String) {
+    fun storeServerStartMs(startDate: Long) {
         with(preferences.edit()) {
-            putString(ServerStartDateKey, startDate)
+            putLong(ServerStartMsKey, startDate)
             apply()
         }
     }
 
-    fun getServerStartDate(): String? = preferences.getString(ServerStartDateKey, null)
+    fun getServerStartMs(): Long = preferences.getLong(ServerStartMsKey, -1)
 
     companion object {
         const val AppPreferences = "app_preferences"
 
         const val OngoingPhoneNumberKey = "ongoing_call_phone_number"
-        const val ServerStartDateKey = "server_start_date"
+        const val ServerStartMsKey = "server_start_ms"
     }
 }

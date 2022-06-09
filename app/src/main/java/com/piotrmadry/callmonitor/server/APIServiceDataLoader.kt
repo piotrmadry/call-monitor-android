@@ -21,7 +21,15 @@ class APIServiceDataLoader @Inject constructor(
 ) {
 
     fun getRootResponse(): RootResponse {
-        val serverStartDate = appPreferences.getServerStartDate() ?: ""
+        val serverStartMs = appPreferences.getServerStartMs()
+
+        val serverStartDate = if (serverStartMs != -1L) {
+            dateUtils.toDateTimeWithTimeZone(
+                serverStartMs,
+                Locale.getDefault()
+            )
+        } else null
+
         val localIPAddress = networkUtils.getLocalIPAddressWithPort()
 
         return RootResponse(
