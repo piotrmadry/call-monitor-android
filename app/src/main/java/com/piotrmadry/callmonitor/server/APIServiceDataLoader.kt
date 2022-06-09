@@ -48,16 +48,23 @@ class APIServiceDataLoader @Inject constructor(
     }
 
     fun getLogResponse(): List<Log> {
-        return callHistory.getLog()
+        val timesQueriedMap = appPreferences.getLogsTimesQueried()
+        val logs = callHistory.getLog()
             .map {
+                val timesQueried = (timesQueriedMap[it.id] ?: 0) + 1
+                timesQueriedMap[it.id] = timesQueried
+
                 Log(
                     beginning = dateUtils.toDateTimeWithTimeZone(it.beginning, Locale.getDefault()),
                     durationInSeconds = it.duration,
                     phoneNumber = it.number,
                     contactName = it.name,
-                    timesQueried = it.timesQueried
+                    timesQueried = timesQueried
                 )
             }
+
+        appPreferences.storeLogsTimesQueried(timesQueriedMap.toMap())
+        return logs
     }
 
     fun getStatus(): StatusResponse {
