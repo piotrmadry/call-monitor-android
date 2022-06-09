@@ -1,0 +1,3 @@
+package com.piotrmadry.callmonitor.adapter
+
+interface RecyclerViewItem

@@ -1,8 +1,9 @@
 package com.piotrmadry.callmonitor
 
+import com.piotrmadry.callmonitor.response.Log
+import com.piotrmadry.callmonitor.response.RootResponse
+import com.piotrmadry.callmonitor.response.StatusResponse
 import com.piotrmadry.httpserver.APIService
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import java.lang.reflect.Type
@@ -37,30 +38,3 @@ class APIServiceImpl @Inject constructor(
     }
 }
 
-@JsonClass(generateAdapter = true)
-data class StatusResponse(
-    @Json(name = "ongoing") val ongoing: Boolean,
-    @Json(name = "number") val phoneNumber: String? = null,
-    @Json(name = "name") val contactName: String? = null,
-)
-
-@JsonClass(generateAdapter = true)
-data class RootResponse(
-    @Json(name = "start") val start: String,
-    @Json(name = "services") val services: List<Service>,
-)
-
-@JsonClass(generateAdapter = true)
-data class Service(
-    @Json(name = "name") val name: String,
-    @Json(name = "uri") val uri: String,
-)
-
-@JsonClass(generateAdapter = true)
-data class Log(
-    @Json(name = "beginning") val beginning: String,
-    @Json(name = "duration") val durationInSeconds: String,
-    @Json(name = "number") val phoneNumber: String,
-    @Json(name = "name") val contactName: String,
-    @Json(name = "timesQueried") val timesQueried: Int,
-)

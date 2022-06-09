@@ -9,7 +9,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.piotrmadry.callmonitor.adapter.CallMonitorRecyclerViewAdapter
 import com.piotrmadry.callmonitor.databinding.ActivityMainBinding
+import com.piotrmadry.callmonitor.utils.IntentUtils
 import com.piotrmadry.httpserver.HttpServer
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

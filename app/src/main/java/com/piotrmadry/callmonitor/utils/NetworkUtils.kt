@@ -1,5 +1,6 @@
-package com.piotrmadry.callmonitor
+package com.piotrmadry.callmonitor.utils
 
+import com.piotrmadry.callmonitor.Constants
 import java.net.Inet4Address
 import java.net.InetAddress
 import java.net.NetworkInterface

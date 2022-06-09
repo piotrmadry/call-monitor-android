@@ -1,17 +1,14 @@
-package com.piotrmadry.callmonitor
+package com.piotrmadry.callmonitor.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.piotrmadry.callmonitor.item.CallItem
+import com.piotrmadry.callmonitor.R
+import com.piotrmadry.callmonitor.item.ServerInfoItem
 import com.piotrmadry.callmonitor.databinding.CallItemBinding
 import com.piotrmadry.callmonitor.databinding.ServerInfoItemBinding
-
-interface RecyclerViewItem
-
-data class ServerInfoItem(val ipAddress: String) : RecyclerViewItem
-
-data class CallItem(val id: String, val name: String, val duration: String) : RecyclerViewItem
 
 class CallMonitorRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

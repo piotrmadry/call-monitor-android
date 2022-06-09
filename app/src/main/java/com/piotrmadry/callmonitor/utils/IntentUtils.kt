@@ -1,4 +1,4 @@
-package com.piotrmadry.callmonitor
+package com.piotrmadry.callmonitor.utils
 
 import android.content.Context
 import android.content.Intent

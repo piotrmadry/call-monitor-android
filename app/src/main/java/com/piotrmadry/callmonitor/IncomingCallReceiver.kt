@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.telephony.TelephonyManager
+import com.piotrmadry.callmonitor.storage.AppSharedPreferences
 import javax.inject.Inject
 
 class IncomingCallReceiver @Inject constructor(private val pref: AppSharedPreferences) :
