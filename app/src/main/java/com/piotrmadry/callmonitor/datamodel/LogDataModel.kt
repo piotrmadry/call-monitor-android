@@ -5,6 +5,5 @@ data class LogDataModel(
     val beginning: Long,
     val duration: String,
     val number: String,
-    val name: String,
-    val timesQueried: Int
+    val name: String
 )

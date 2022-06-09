@@ -53,8 +53,7 @@ class CallHistoryUseCase @Inject constructor(
                     beginning = cursor.getLong(beginningIndex),
                     duration = cursor.getString(durationIndex),
                     number = cursor.getString(numberIndex),
-                    name = getContactNameByPhoneNumber(cursor.getString(numberIndex)) ?: "Unknown",
-                    timesQueried = 1
+                    name = getContactNameByPhoneNumber(cursor.getString(numberIndex)) ?: "Unknown"
                 )
             )
         }
