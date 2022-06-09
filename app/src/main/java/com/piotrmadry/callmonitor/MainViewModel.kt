@@ -26,11 +26,12 @@ class MainViewModel @Inject constructor(
     private val _items = MutableLiveData<List<RecyclerViewItem>>()
     val items: LiveData<List<RecyclerViewItem>> = _items
 
-    private val _progress = MutableLiveData<Boolean>()
+    private val _progress = MutableLiveData(true)
     val progress: LiveData<Boolean> = _progress
 
     fun getData() {
-        _progress.value = true
+        _progress.value = _items.value?.isEmpty() ?: true
+
         viewModelScope.launch {
             val callItems = withContext(dispatcherIo) {
                 callHistoryUseCase.getLogCompact().map {

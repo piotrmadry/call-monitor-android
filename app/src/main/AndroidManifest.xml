@@ -16,13 +16,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CallMonitor">
-<!--        <receiver-->
-<!--            android:name="IncomingCallReceiver"-->
-<!--            android:exported="false">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.PHONE_STATE" />-->
-<!--            </intent-filter>-->
-<!--        </receiver>-->
 
         <activity
             android:name=".MainActivity"

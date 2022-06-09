@@ -26,24 +26,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var server: HttpServer
-
     private lateinit var binding: ActivityMainBinding
 
     @Inject
-    lateinit var callHistoryUseCase: CallHistoryUseCase
-
-    @Inject
     lateinit var permissionManager: PermissionUtils
-
-    @Inject
-    lateinit var impl: APIServiceImpl
-
-    @Inject
-    lateinit var date: DateUtils
-
-    @Inject
-    lateinit var pref: AppSharedPreferences
 
     private val viewModel: MainViewModel by viewModels()
 
@@ -54,8 +40,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        server = HttpServer(port = Server.Port, service = impl)
-        server.start().run { pref.storeServerStartMs(System.currentTimeMillis()) }
 
         binding.recyclerview.apply {
             layoutManager = LinearLayoutManager(context)
@@ -103,9 +87,7 @@ class MainActivity : AppCompatActivity() {
 
     private val permissionResult: ActivityResultLauncher<String> = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { hasPermission ->
-        if (hasPermission) viewModel.getData()
-    }
+    ) {}
 
     private fun checkAndRequestReadCallLogPermission() = permissionManager.hasPermission(
         resultLauncher = permissionResult,
@@ -127,9 +109,4 @@ class MainActivity : AppCompatActivity() {
 
     private fun openAppSettings() =
         startActivity(IntentUtils.getAppSettingsIntent(this))
-
-    override fun onDestroy() {
-        super.onDestroy()
-        server.stop()
-    }
 }
