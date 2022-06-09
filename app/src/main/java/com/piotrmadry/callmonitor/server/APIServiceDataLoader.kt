@@ -67,7 +67,7 @@ class APIServiceDataLoader @Inject constructor(
         return logs
     }
 
-    fun getStatus(): StatusResponse {
+    fun getStatusResponse(): StatusResponse {
         val phoneNumber = appPreferences.getOngoingCallPhoneNumber()
             ?: return StatusResponse(ongoing = false)
 

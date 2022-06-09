@@ -83,7 +83,7 @@ class APIServiceDataLoaderTest {
         every { appPreferences.getOngoingCallPhoneNumber() } returns "+48111111111"
         every { callHistory.getContactNameByPhoneNumber(any()) } returns "Joe Doe"
 
-        val response = create().getStatus()
+        val response = create().getStatusResponse()
 
         val expected = StatusResponse(
             ongoing = true,
@@ -98,7 +98,7 @@ class APIServiceDataLoaderTest {
     fun `ensure status response returned correctly - for no call`() {
         every { appPreferences.getOngoingCallPhoneNumber() } returns null
 
-        val response = create().getStatus()
+        val response = create().getStatusResponse()
 
         val expected = StatusResponse(
             ongoing = false

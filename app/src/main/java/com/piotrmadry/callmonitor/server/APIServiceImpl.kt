@@ -32,7 +32,7 @@ class APIServiceImpl @Inject constructor(
     }
 
     override fun getStatus(): String {
-        val response = dataLoader.getStatus()
+        val response = dataLoader.getStatusResponse()
 
         return moshi.adapter(StatusResponse::class.java).toJson(response)
     }
