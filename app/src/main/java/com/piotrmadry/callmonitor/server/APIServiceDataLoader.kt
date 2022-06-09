@@ -6,7 +6,9 @@ import com.piotrmadry.callmonitor.response.Service
 import com.piotrmadry.callmonitor.response.StatusResponse
 import com.piotrmadry.callmonitor.storage.AppSharedPreferences
 import com.piotrmadry.callmonitor.usecase.CallHistoryUseCase
+import com.piotrmadry.callmonitor.utils.DateUtils
 import com.piotrmadry.callmonitor.utils.NetworkUtils
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,14 +16,16 @@ import javax.inject.Singleton
 class APIServiceDataLoader @Inject constructor(
     private val appPreferences: AppSharedPreferences,
     private val callHistory: CallHistoryUseCase,
-    private val networkUtils: NetworkUtils
+    private val networkUtils: NetworkUtils,
+    private val dateUtils: DateUtils
 ) {
 
     fun getRootResponse(): RootResponse {
+        val serverStartDate = appPreferences.getServerStartDate() ?: ""
         val localIPAddress = networkUtils.getLocalIPAddressWithPort()
 
         return RootResponse(
-            start = "Date HERE",
+            start = serverStartDate,
             services = listOf(
                 Service(
                     name = "status",
@@ -39,7 +43,7 @@ class APIServiceDataLoader @Inject constructor(
         return callHistory.getLog()
             .map {
                 Log(
-                    beginning = it.beginning,
+                    beginning = dateUtils.toDateTimeWithTimeZone(it.beginning, Locale.getDefault()),
                     durationInSeconds = it.duration,
                     phoneNumber = it.number,
                     contactName = it.name,

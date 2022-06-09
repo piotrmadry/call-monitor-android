@@ -12,12 +12,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.piotrmadry.callmonitor.adapter.CallMonitorRecyclerViewAdapter
 import com.piotrmadry.callmonitor.databinding.ActivityMainBinding
 import com.piotrmadry.callmonitor.server.APIServiceImpl
+import com.piotrmadry.callmonitor.storage.AppSharedPreferences
 import com.piotrmadry.callmonitor.usecase.CallHistoryUseCase
+import com.piotrmadry.callmonitor.utils.DateUtils
 import com.piotrmadry.callmonitor.utils.IntentUtils
 import com.piotrmadry.callmonitor.utils.PermissionUtils
 import com.piotrmadry.httpserver.Server
 import com.piotrmadry.httpserver.HttpServer
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,6 +39,12 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var impl: APIServiceImpl
 
+    @Inject
+    lateinit var date: DateUtils
+
+    @Inject
+    lateinit var pref: AppSharedPreferences
+
     private val viewModel: MainViewModel by viewModels()
 
     private val recyclerViewAdapter = CallMonitorRecyclerViewAdapter()
@@ -46,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         server = HttpServer(port = Server.Port, service = impl)
-        server.start()
+        server.start().run { pref.storeServerStartDate(date.toDateTimeWithTimeZone(System.currentTimeMillis(), Locale.getDefault())) }
 
         binding.recyclerview.apply {
             layoutManager = LinearLayoutManager(context)

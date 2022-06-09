@@ -38,7 +38,7 @@ class CallHistoryUseCase @Inject constructor(
             logs.add(
                 LogDataModel(
                     id = cursor.getString(beginningIndex),
-                    beginning = cursor.getString(beginningIndex),
+                    beginning = cursor.getLong(beginningIndex),
                     duration = cursor.getString(durationIndex),
                     number = cursor.getString(numberIndex),
                     name = getContactNameByPhoneNumber(cursor.getString(numberIndex)) ?: "Unknown",
@@ -47,7 +47,7 @@ class CallHistoryUseCase @Inject constructor(
             )
         }
         cursor.close()
-        return logs.toList()
+        return logs.reversed()
     }
 
     fun getLogCompact(): List<LogCompactDataModel> {
@@ -69,7 +69,7 @@ class CallHistoryUseCase @Inject constructor(
             )
         }
         cursor.close()
-        return logs.toList()
+        return logs.reversed()
     }
 
     fun getContactNameByPhoneNumber(phoneNumber: String): String? {
