@@ -20,10 +20,10 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     @IO private val dispatcherIo: CoroutineDispatcher,
     private val networkUtils: NetworkUtils,
-    private val callHistoryUseCase: CallHistoryUseCase
+    private val callHistory: CallHistoryUseCase
 ) : ViewModel() {
 
-    private val _items = MutableLiveData<List<RecyclerViewItem>>()
+    private val _items = MutableLiveData<List<RecyclerViewItem>>(listOf())
     val items: LiveData<List<RecyclerViewItem>> = _items
 
     private val _progress = MutableLiveData(true)
@@ -34,7 +34,7 @@ class MainViewModel @Inject constructor(
 
         viewModelScope.launch {
             val callItems = withContext(dispatcherIo) {
-                callHistoryUseCase.getLogCompact().map {
+                callHistory.getLogCompact().map {
                     CallItem(
                         id = it.id,
                         name = it.contactName,
