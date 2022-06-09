@@ -2,6 +2,7 @@ package com.piotrmadry.callmonitor
 
 import android.app.Application
 import android.content.IntentFilter
+import com.piotrmadry.callmonitor.broadcast.IncomingCallReceiver
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 

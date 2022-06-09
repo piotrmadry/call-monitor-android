@@ -1,23 +1,25 @@
-package com.piotrmadry.callmonitor
+package com.piotrmadry.callmonitor.server
 
 import com.piotrmadry.callmonitor.response.Log
 import com.piotrmadry.callmonitor.response.RootResponse
 import com.piotrmadry.callmonitor.response.Service
 import com.piotrmadry.callmonitor.response.StatusResponse
 import com.piotrmadry.callmonitor.storage.AppSharedPreferences
-import com.piotrmadry.callmonitor.utils.NetworkHelper
+import com.piotrmadry.callmonitor.usecase.CallHistoryUseCase
+import com.piotrmadry.callmonitor.utils.NetworkUtils
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class APIServiceResponseLoader @Inject constructor(
-    private val callHistory: CallHistory,
-    private val networkHelper: NetworkHelper,
-    private val pref: AppSharedPreferences
+class APIServiceDataLoader @Inject constructor(
+    private val appPreferences: AppSharedPreferences,
+    private val callHistory: CallHistoryUseCase,
+    private val networkUtils: NetworkUtils
 ) {
 
     fun getRootResponse(): RootResponse {
-        val localIPAddress = networkHelper.getLocalIPAddressWithPort()
+        val localIPAddress = networkUtils.getLocalIPAddressWithPort()
+
         return RootResponse(
             start = "Date HERE",
             services = listOf(
@@ -47,7 +49,7 @@ class APIServiceResponseLoader @Inject constructor(
     }
 
     fun getStatus(): StatusResponse {
-        val phoneNumber = pref.getOngoingCallPhoneNumber()
+        val phoneNumber = appPreferences.getOngoingCallPhoneNumber()
             ?: return StatusResponse(ongoing = false)
 
         val name = callHistory.getContactNameByPhoneNumber(phoneNumber) ?: "Unknown"

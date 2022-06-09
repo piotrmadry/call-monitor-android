@@ -10,16 +10,16 @@ import javax.inject.Singleton
 class AppSharedPreferences @Inject constructor(
     @ApplicationContext context: Context
 ) {
-    private val pref = context.getSharedPreferences(AppPreferences, Context.MODE_PRIVATE)
+    private val preferences = context.getSharedPreferences(AppPreferences, Context.MODE_PRIVATE)
 
     fun storeOngoingCallPhoneNumber(phoneNumber: String?) {
-        with(pref.edit()) {
+        with(preferences.edit()) {
             putString(OngoingPhoneNumber, phoneNumber)
             apply()
         }
     }
 
-    fun getOngoingCallPhoneNumber(): String? = pref.getString(OngoingPhoneNumber, null)
+    fun getOngoingCallPhoneNumber(): String? = preferences.getString(OngoingPhoneNumber, null)
 
     companion object {
         const val AppPreferences = "app_preferences"

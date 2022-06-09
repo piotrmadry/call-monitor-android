@@ -1,13 +1,15 @@
-package com.piotrmadry.callmonitor
+package com.piotrmadry.callmonitor.usecase
 
 import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
 import android.provider.CallLog
 import android.provider.ContactsContract
+import com.piotrmadry.callmonitor.datamodel.LogCompactDataModel
+import com.piotrmadry.callmonitor.datamodel.LogDataModel
 import javax.inject.Inject
 
-class CallHistory @Inject constructor(
+class CallHistoryUseCase @Inject constructor(
     private val contentResolver: ContentResolver
 ) {
     companion object {
@@ -108,17 +110,3 @@ class CallHistory @Inject constructor(
 }
 
 
-data class LogCompactDataModel(
-    val id: String,
-    val contactName: String,
-    val durationInSeconds: String
-)
-
-data class LogDataModel(
-    val id: String,
-    val beginning: String,
-    val duration: String,
-    val number: String,
-    val name: String,
-    val timesQueried: Int
-)

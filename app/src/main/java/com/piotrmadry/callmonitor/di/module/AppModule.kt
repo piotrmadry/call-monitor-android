@@ -18,8 +18,9 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideContentResolver(application: Application): ContentResolver =
-        application.contentResolver
+    fun provideContentResolver(
+        application: Application
+    ): ContentResolver = application.contentResolver
 
     @Provides
     @IO

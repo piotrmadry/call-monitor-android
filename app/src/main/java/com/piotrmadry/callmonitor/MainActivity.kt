@@ -11,7 +11,11 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.piotrmadry.callmonitor.adapter.CallMonitorRecyclerViewAdapter
 import com.piotrmadry.callmonitor.databinding.ActivityMainBinding
+import com.piotrmadry.callmonitor.server.APIServiceImpl
+import com.piotrmadry.callmonitor.usecase.CallHistoryUseCase
 import com.piotrmadry.callmonitor.utils.IntentUtils
+import com.piotrmadry.callmonitor.utils.PermissionUtils
+import com.piotrmadry.httpserver.Server
 import com.piotrmadry.httpserver.HttpServer
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -24,15 +28,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     @Inject
-    lateinit var callHistory: CallHistory
+    lateinit var callHistoryUseCase: CallHistoryUseCase
 
     @Inject
-    lateinit var permissionManager: PermissionsManager
+    lateinit var permissionManager: PermissionUtils
 
     @Inject
     lateinit var impl: APIServiceImpl
 
-    private val viewModel: MainActivityViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels()
 
     private val recyclerViewAdapter = CallMonitorRecyclerViewAdapter()
 
@@ -41,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        server = HttpServer(port = Constants.ServerPort, service = impl)
+        server = HttpServer(port = Server.Port, service = impl)
         server.start()
 
         binding.recyclerview.apply {

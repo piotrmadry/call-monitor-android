@@ -1,4 +1,4 @@
-package com.piotrmadry.callmonitor
+package com.piotrmadry.callmonitor.utils
 
 import android.app.Activity
 import android.content.Context
@@ -11,7 +11,7 @@ import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 
 @ActivityScoped
-class PermissionsManager @Inject constructor(
+class PermissionUtils @Inject constructor(
     @ActivityContext private val context: Context
 ) {
 

@@ -8,7 +8,8 @@ import com.piotrmadry.callmonitor.adapter.RecyclerViewItem
 import com.piotrmadry.callmonitor.di.qualifier.IO
 import com.piotrmadry.callmonitor.item.CallItem
 import com.piotrmadry.callmonitor.item.ServerInfoItem
-import com.piotrmadry.callmonitor.utils.NetworkHelper
+import com.piotrmadry.callmonitor.usecase.CallHistoryUseCase
+import com.piotrmadry.callmonitor.utils.NetworkUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -16,10 +17,10 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class MainActivityViewModel @Inject constructor(
+class MainViewModel @Inject constructor(
     @IO private val dispatcherIo: CoroutineDispatcher,
-    private val networkHelper: NetworkHelper,
-    private val callHistory: CallHistory
+    private val networkUtils: NetworkUtils,
+    private val callHistoryUseCase: CallHistoryUseCase
 ) : ViewModel() {
 
     private val _items = MutableLiveData<List<RecyclerViewItem>>()
@@ -32,7 +33,7 @@ class MainActivityViewModel @Inject constructor(
         _progress.value = true
         viewModelScope.launch {
             val callItems = withContext(dispatcherIo) {
-                callHistory.getLogCompact().map {
+                callHistoryUseCase.getLogCompact().map {
                     CallItem(
                         id = it.id,
                         name = it.contactName,
@@ -48,7 +49,7 @@ class MainActivityViewModel @Inject constructor(
     private fun createServerInfoItem() =
         listOf(
             ServerInfoItem(
-                ipAddress = networkHelper.getLocalIPAddressWithPort() ?: "Local IP address not found"
+                ipAddress = networkUtils.getLocalIPAddressWithPort() ?: "Local IP address not found"
             )
         )
 }

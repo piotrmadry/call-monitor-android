@@ -1,4 +1,4 @@
-package com.piotrmadry.callmonitor
+package com.piotrmadry.callmonitor.server
 
 import com.piotrmadry.callmonitor.response.Log
 import com.piotrmadry.callmonitor.response.RootResponse
@@ -11,17 +11,17 @@ import javax.inject.Inject
 
 class APIServiceImpl @Inject constructor(
     private val moshi: Moshi,
-    private val responseLoader: APIServiceResponseLoader
+    private val dataLoader: APIServiceDataLoader
 ) : APIService {
 
     override fun getRoot(): String {
-        val response = responseLoader.getRootResponse()
+        val response = dataLoader.getRootResponse()
 
         return moshi.adapter(RootResponse::class.java).toJson(response)
     }
 
     override fun getLog(): String {
-        val response = responseLoader.getLogResponse()
+        val response = dataLoader.getLogResponse()
 
         val type: Type = Types.newParameterizedType(
             List::class.java,
@@ -32,7 +32,7 @@ class APIServiceImpl @Inject constructor(
     }
 
     override fun getStatus(): String {
-        val response = responseLoader.getStatus()
+        val response = dataLoader.getStatus()
 
         return moshi.adapter(StatusResponse::class.java).toJson(response)
     }
